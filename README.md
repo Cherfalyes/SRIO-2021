@@ -12,12 +12,10 @@
 
 ## La procédure d'évaluation
 
-Ce module sera évalué sur la base des rapports et du code issu des TP et d'un contrôle sur table à la fin du semestre.
+Ce module sera évalué sur la base des rapports et du code issu des TP.
 
 Ces rapports doivent fidèlement rendre compte de votre travail.
-Vous y écrirez ce que vous comprenez des exercices, les différents problèmes que vous rencontrez et comment vous réussissez à les résoudre, ainsi que les réponses au questions théoriques présentes dans les sujets de TP. Les TPs peuvent être réaliser en binôme ou seul (un TP fait en binôme implique que les rendus sont commun).
-
-Le contrôle terminal portera sur des notions vues en cours, ainsi que sur celles vues en TP à travers les questions théoriques.
+Vous y écrirez ce que vous comprenez des exercices, les différents problèmes que vous rencontrez et comment vous réussissez à les résoudre, ainsi que les réponses au questions théoriques présentes dans les sujets de TP. Les TPs peuvent être réalisés en binôme ou seul (un TP fait en binôme implique que les rendus sont commun).
 
 ## Organisation du cours
 
