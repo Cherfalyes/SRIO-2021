@@ -35,4 +35,4 @@ Les dates de soumissions indiqués corresondent au dernier jour ou vous pourrez 
 | 16/12/2020      | [TD5](td5/td5.md) | Analyse dynamique d'application (Android) | code    |    10/01/2021   |
 | 05/01/2021      | [TD5](td5/td5.md) | Analyse dynamique d'application (Android) | Rapport + code    |  10/01/2021   |
 |      |  |  |     |                   |
-| 15/01/2021      | CC | Contrôle continu (2h) | Devoir sur table    |                   |
+
