@@ -90,7 +90,7 @@ Dans cette partie, vous allez modifier le code de l'application produit dans la 
 Dans certains scénarios malicieux, un pirate subtilise les contacts de plusieurs centaines de téléphones pour 
 ensuite effectuer des tentatives phishing avec les numéros de téléphones collectés.
 <!--
-A partir du travail effectué lors du TD5, il vous est demandé de mettre à jour le code de votre application pour 
+A partir du travail effectué lors du TD1, il vous est demandé de mettre à jour le code de votre application pour 
 collecter les contacts de l'utilisateur.
 -->
 

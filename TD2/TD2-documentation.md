@@ -2,7 +2,7 @@
 
 - Avant de commencer, il est important de créer un jeu de données en ajoutant quelques contacts avec leurs numéros de téléphones.
 - Pour récupérer les contacts de l'utilisateur, le code suivant vous est fourni, ce dernier retourne le nom et le numéro de téléphone du premier contact.
-
+```Java
 // Définir un curseur qui va parcourir les contacts, le carnet d'adresses d'android se présente comme un tableau ayant multiples colonnes
 Cursor cursor = mContext.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,null,null, null);
 
@@ -20,4 +20,4 @@ if (cursor.moveToNext())
 
 // Fermer le curseur, cette commande est obligatoire
 cursor.close();
-
+```
