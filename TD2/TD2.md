@@ -118,10 +118,6 @@ Le message envoyé doit être au format `JSON` et aura la structure suivante :
 	]
 }
 ```
-Pour garantir l'unicité des données, les contacts que vous collectez sur chaque téléphone doivent être associés à un identifiant unique.
-Chaque Android device possède un identifiant unique qu'il est possible d'obtenir en appelant la méthode 
-`TelephonyManager.getImei()` ([documentation](https://developer.android.com/reference/android/telephony/TelephonyManager#getImei())).
-
 * Ecrivez le code __Javascript__ (dans le context de Webview) nécessaire pour envoyer une requête `http` contenant le message décrit précédemment.
 
 ##### Questions
