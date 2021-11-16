@@ -1,9 +1,9 @@
-## Documentation pour TD2
+# Documentation pour TD2
 
-# Création d'une classe Contact
+## Création d'une classe Contact
 - Cette dernière doit contenir deux Strings pour le nom et le numéro de téléphone avec la méthode contructeur, ainsi que tous les getters et setters nécessaires.
 
-# Récupération des contacts - exemple
+## Récupération des contacts - exemple
 
 - Avant de commencer, il est important de créer un jeu de données en ajoutant quelques contacts avec leurs numéros de téléphones.
 - Pour récupérer les contacts de l'utilisateur, le code suivant vous est fourni, ce dernier retourne le nom et le numéro de téléphone du premier contact. Il vous est demandé d'utiliser le code suivant et de m'enrichir afin de créer une méthode dana la classe `WebAppInterface` qui renvoie la liste des contacts récupérée.
@@ -33,7 +33,7 @@ contacts.add(new Contact(name,number));
 cursor.close();
 ```
 
-# Passage d'une structure de données Java vers un String Json avec la classe GSON 
+## Passage d'une structure de données Java vers un String Json avec la classe GSON 
 
 - Pour réaliser cette transformation `ArrayList to JSON`, la classe GSON qui est contenue dans le jar téléchargeable dans le lien suivant est utilisée. 
 https://jar-download.com/artifacts/com.google.code.gson/gson/2.8.7
@@ -44,7 +44,7 @@ https://jar-download.com/artifacts/com.google.code.gson/gson/2.8.7
 String donnéesJson = new GSON().toJson(uneArrayList);
 ```
 
-# Afficher les contacts depuis JavaScript
+## Afficher les contacts depuis JavaScript
 - Après avoir fait appel à la méthode qui renvoie les contacts depuis Javascript via l'instance de `WebAppInterface` qui nous avons nommé `Android`, il est nécessaire de passer du format `JSON` vers un format `Javascript Object` comme l'exemple le montre : 
 
 ```Javascript
@@ -55,7 +55,7 @@ var jsonContacts = Android.getAllContacts();
 var contacts = JSON.parse(jsonContacts);
 ```
 
-# Afficher un contact sous format HTML (Tableau)
+## Afficher un contact sous format HTML (Tableau)
 - Pour se faire, il faut d'abord créer un tableau HTML vide que l'on lui associe un `id` pour pouvoir modifier son contenu par la suite.
 
 ```HTML
@@ -81,7 +81,7 @@ tableContent += "</tr>"; // Fin de la nouvelle ligne HTML
 // remplacer le contenu du tableau par le contenu de la variable tableContent
 document.getElementById("contacts").innerHTML = tableContent;
 ```
-# Ajouter la fonction onClick pour chaque ligne du tableau, et qui récupère le contenu de la ligne
+## Ajouter la fonction onClick pour chaque ligne du tableau, et qui récupère le contenu de la ligne
 - Dans la même fonction JavaScript qui récupère puis affiche les contacts, rajouter le script suivant :
 
 ```JavaScript
