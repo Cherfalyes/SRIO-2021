@@ -57,7 +57,7 @@ var contacts = JSON.parse(jsonContacts);
 
 ## Afficher un contact sous format HTML (Tableau)
 - Pour se faire, il faut d'abord créer un tableau HTML vide que l'on lui associe un `id` pour pouvoir modifier son contenu par la suite.
-
+Dans le fichier HTML :
 ```HTML
 <table class="table table-stripped" id="table" border="2"> 
 		<thead>
@@ -69,6 +69,7 @@ var contacts = JSON.parse(jsonContacts);
 </table>
 ```
 
+Dans la fonction JS qui récupère et affiche les contacts
 ```JavaScript
 // Création d'une variable qui contiendra le contenu du tableau
 var tableContent = "";
