@@ -20,7 +20,7 @@ Vous y écrirez ce que vous comprenez des exercices, les différents problèmes 
 ## Organisation du cours
 
 Les dates de soumissions des rapports sont strictes. Un rapport soumis en retard est équivalent à une note de 0.
-Les dates de soumissions indiqués corresondent au dernier jour ou vous pourrez déposer vos fichiers (ex : le td3 peut être soumis le 01/12/2020 mais à partir de 00:00 dans la nuit du 01/12/2020 au 02/12/2020 cela ne sera plus possible)
+Les dates de soumissions indiqués corresondent au dernier jour ou vous pourrez déposer vos fichiers (ex : le td3 peut être soumis le 29/11/2021 mais à partir de 00:00 dans la nuit du 29/11/2021 au 30/11/2021 cela ne sera plus possible)
 
 | Dates           | Type              | Titre                                     | Evaluation        | Date de soumission|
 | :------------   | :---------------: | :---------------:                         | :---------------: | :---------------: |
@@ -31,6 +31,6 @@ Les dates de soumissions indiqués corresondent au dernier jour ou vous pourrez 
 | 26/11/2021      | [TD4](TD4/TD4.md) | Analyse statique d'application (Android)  |  Rapport + code   |  06/12/2021       |
 | 26/11/2021      | [TD4](TD4/TD4.md) | Analyse statique d'application (Android)  |  Rapport + code   |  06/12/2021       |
 | 06/12/2021      | [TD5](TD5/TD5.md) | Analyse dynamique d'application (Android) |  Rapport + code   |  13/12/2021       |
-| 06/12/2021      | [TD5](TD5/TD5.md) | Analyse dynamique d'application (Android) |  Rapport + code   |  13/12/2021       |
+| 06/12/2021      | [TD5](TD5/TD5.md) | Analyse dynamique d'application (Android) |  Rapport + code   |  10/12/2021       |
 
 - Pour le TD1 et TD2, il vous est demandé de fournir un seul rapport.
