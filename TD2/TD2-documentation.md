@@ -161,6 +161,26 @@ Dans cette partie, il vous est demandé de créer un serveur avec `NodeJS`. Ce d
 4. enregistrer les contacts dans un fichier txt ou json de la machine exécutant le serveur.
 5. Renvoyer une erreur si le contenu de la requête n'est pas au format souhaité
 
-- Afin de reçevoir les contacts sous format `JSON`, il est conseillé d'utiliser Express JS. La documentation est disponible ici :
+- Afin de reçevoir les contacts sous format `JSON`, il faut utiliser Express JS. La documentation est disponible ici :
 [https://expressjs.com/fr/guide/routing.html](https://expressjs.com/fr/guide/routing.html)
 
+### Mise en place d'un serveur NodeJS avec Express
+Dans cette partie, on aura principalement besoin de gérer deux types de requêtes : `GET` et `POST`. Chaque requête devra actionner une fonction qui prend comme paramètre deux attributs, par convention req pour `Request` et res pour `Result`.
+
+```NodeJS
+const bodyParser = require("body-parser");
+const express = require("express");
+const app = express();
+const fs = require('fs');
+
+app.use(express.json());
+app.use(bodyParser.urlencoded({extended: true}));
+
+app.get('/', (req, res) => {
+    res.send('welcome page!')
+});
+
+app.post('/contacts', (req, res) => {
+    var requete = req.body
+}
+```

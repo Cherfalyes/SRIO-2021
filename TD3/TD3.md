@@ -121,6 +121,10 @@ que les coordonnées GPS sont mises à jour. L'*Intent* doit contenir deux champ
 * Dans l'application de News, écrivez le `BroadcastReceiver` qui permet de recevoir les *Intents* envoyés par l'application GPS.
 * Pour chaque Intent reçu dans l'application news, écrivez le code *Java* nécessaire pour envoyer les coordonnées GPS au serveur pirate (implémenté lors du TD6) par le biais d'une requête `http`.
 
+[https://developer.android.com/training/sharing/send](https://developer.android.com/training/sharing/send)
+
+[https://developer.android.com/training/sharing/receive](https://developer.android.com/training/sharing/receive)
+
 Spécifications de la requête:
 
 | URL           | Method        | Body format        |
@@ -130,7 +134,7 @@ Spécifications de la requête:
 Voici la structure du message:
 ```json
 {
-	"imei": "string",
+	
 	"coordinates": {
 			"lat": "double",
 			"lng": "double"
