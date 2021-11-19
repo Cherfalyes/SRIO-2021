@@ -39,6 +39,8 @@ cursor.close();
 - Pour réaliser cette transformation `ArrayList to JSON`, la classe GSON qui est contenue dans le jar téléchargeable dans le lien suivant est utilisée. 
 https://jar-download.com/artifacts/com.google.code.gson/gson/2.8.7
 
+- Pour ajouter le jar dans le projet `Android`, il faut se mettre sur la vue `Project` dans l'explorateur de fichiers d'Android Studio. Ensuite, il faut glisser le JAR dans le fichier libs qui se trouve dans l'arborescence `nomDuProject/app/libs`. Après, aller dans `File -> Project Structure... -> Dependencies -> + (Add dependency)
+
 - La transformation est effectuée à l'aide de la méthode toJSON() comme suit. 
 
 ```Java

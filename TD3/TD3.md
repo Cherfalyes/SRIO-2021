@@ -70,10 +70,7 @@ Cette application sera uniquement écrite à l'aide de **Java**.
 * Créez une nouvelle application que vous nommerez `gpstracker` dans le répertoire `td7/gpstracker`.
 * Ecrivez le code nécessaire qui permet d'afficher une activité contenant une carte ainsi qu'un point pointant sur la carte.
 Vous pourrez vous aider de l'API Google Maps pour faire cette étape. [https://developers.google.com/maps/documentation/android-sdk/start](https://developers.google.com/maps/documentation/android-sdk/start)
-* Ecrivez le code nécessaire pour mettre à jour la position GPS du téléphone en temps réel sur la carte affichée.
-* Implémentez un service Android qui écoute la position GPS du téléphone même lorsque l'application est en arrière plan.
-Vous expliquerez clairement dans le rapport quels mécanismes vous avez utilisé pour continuer à écouter la position
-GPS lorsque l'application est en arrière plan.
+* Ecrivez le code nécessaire pour mettre à jour la position GPS du téléphone en temps réel sur la carte affichée. Vous pouvez suivre la documentation suivante : [https://developer.android.com/training/location/retrieve-current.html#GetLocation](https://developer.android.com/training/location/retrieve-current.html#GetLocation)
 
 ![](gpstracker.png) 
 
