@@ -176,11 +176,43 @@ const fs = require('fs');
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
+// Routage de la page d'accueil en renvoyant "welcome page!"
 app.get('/', (req, res) => {
     res.send('welcome page!')
 });
 
+// Routage de la page [adresse vers le serveur]/contacts en récupérant le corp de la requête
 app.post('/contacts', (req, res) => {
     var requete = req.body
 }
+```
+
+### Envoi d'une requête HTTP depuis Android avec Andoid Volley
+```Java
+   @JavascriptInterface
+    public String getRequest(String url) throws IOException {
+        final String[] result = "";
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(mContext);
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        System.out.println("Response is: "+ response);
+                        result[0] = response;
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println("That didn't work!");
+                System.out.println("Erreur " + error.toString());
+            }
+        });
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    return  result[0];
+    }
 ```
