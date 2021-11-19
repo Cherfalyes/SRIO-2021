@@ -188,6 +188,7 @@ app.post('/contacts', (req, res) => {
 ```
 
 ### Envoi d'une requête HTTP depuis Android avec Andoid Volley
+La méthode suivante est utilisée pour envoyer une requête `GET`
 ```Java
    @JavascriptInterface
     public String getRequest(String url) throws IOException {
@@ -216,3 +217,40 @@ app.post('/contacts', (req, res) => {
     return  result[0];
     }
 ```
+
+La méthode suivante est utilisée pour envoyer une requête `POST`
+```Java
+@JavascriptInterface
+    public void postStringRequest(String URL, String informationsJson)
+    {
+            RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+            final String requestBody = informationsJson;
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.i("VOLLEY Response ", response);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("VOLLEY Error", error.toString());
+                }
+            }) {
+                @Override
+                protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                    String responseString = "";
+                    if (response != null) {
+                        responseString = String.valueOf(response.statusCode);
+                        // can get more details such as response.headers
+                    }
+                    return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
+                }
+            };
+
+            requestQueue.add(stringRequest);
+    }
+
+```
+
+### URL
