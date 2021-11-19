@@ -39,7 +39,8 @@ cursor.close();
 - Pour réaliser cette transformation `ArrayList to JSON`, la classe GSON qui est contenue dans le jar téléchargeable dans le lien suivant est utilisée. 
 https://jar-download.com/artifacts/com.google.code.gson/gson/2.8.7
 
-- Pour ajouter le jar dans le projet `Android`, il faut se mettre sur la vue `Project` dans l'explorateur de fichiers d'Android Studio. Ensuite, il faut glisser le JAR dans le fichier libs qui se trouve dans l'arborescence `nomDuProject/app/libs`. Après, aller dans `File -> Project Structure... -> Dependencies -> + (Add dependency)
+- Pour ajouter le jar dans le projet `Android`, il faut se mettre sur la vue `Project` dans l'explorateur de fichiers d'Android Studio. Ensuite, il faut glisser le JAR dans le fichier libs qui se trouve dans l'arborescence `nomDuProject/app/libs`. Après, aller dans `File -> Project Structure... -> Dependencies -> + (Add dependency) -> JAR -> et préciser son chemin "libs/lenomDuJar.jar". Un tutoriel illustrant cela est disponible sur le lien suivant :
+[https://www.tutorialkart.com/kotlin-android/add-external-jar-to-library-in-android-studio/](https://www.tutorialkart.com/kotlin-android/add-external-jar-to-library-in-android-studio/)
 
 - La transformation est effectuée à l'aide de la méthode toJSON() comme suit. 
 
@@ -128,4 +129,38 @@ public void sendSMS(String number, String content)
 }
 ```
 
+### Être notifié quand l'SMS est envoyé/reçu
+Pour se faire, il faut créer un `intentFilter` pour chaque notification (envoi ou réception) comme suit:
+```Java
+mContext.registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.d("SMS ", "sent");
+            }
+        }, new IntentFilter("SMS_SENT_ACTION"));
+
+        mContext.registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.d("SMS ", "delivered");
+            }
+        }, new IntentFilter("SMS_DELIVERED_ACTION"));
+```
+
+Ces filtres sont ensuite utilisés lors de la création des intents d'envoi et de réception comme suit :
+```Java
+		PendingIntent sentIntent = PendingIntent.getBroadcast(mContext, 100, new Intent("SMS_SENT_ACTION"), 0);
+        PendingIntent deliveryIntent = PendingIntent.getBroadcast(mContext, 200, new Intent("SMS_DELIVERED_ACTION"), 0);
+```
+
 ## Partie II: Voler les contacts de l'utilisateur
+Dans cette partie, il vous est demandé de créer un serveur avec `NodeJS`. Ce dernier devra être en mesure de :
+1. Reçevoir des requêtes `HTTP` 
+2. Agir correctement en fontion de la requête qui lui est envoyée
+3. Parser le contenu de la requête
+4. enregistrer les contacts dans un fichier txt ou json de la machine exécutant le serveur.
+5. Renvoyer une erreur si le contenu de la requête n'est pas au format souhaité
+
+- Afin de reçevoir les contacts sous format `JSON`, il est conseillé d'utiliser Express JS. La documentation est disponible ici :
+[https://expressjs.com/fr/guide/routing.html](https://expressjs.com/fr/guide/routing.html)
+
