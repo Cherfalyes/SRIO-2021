@@ -158,19 +158,32 @@ Dans cette partie, il vous est demandé de créer un serveur avec `NodeJS`. Ce d
 1. Reçevoir des requêtes `HTTP` 
 2. Agir correctement en fontion de la requête qui lui est envoyée
 3. Parser le contenu de la requête
-4. enregistrer les contacts dans un fichier txt ou json de la machine exécutant le serveur.
+4. enregistrer les contacts dans un fichier txt ou json de la machine exécutant le serveur
 5. Renvoyer une erreur si le contenu de la requête n'est pas au format souhaité
 
-- Afin de reçevoir les contacts sous format `JSON`, il faut utiliser Express JS. La documentation est disponible ici :
+- Afin de reçevoir les contacts sous format `JSON`, il est préconisé d'utiliser Express JS. La documentation est disponible ici :
 [https://expressjs.com/fr/guide/routing.html](https://expressjs.com/fr/guide/routing.html)
 
-### Mise en place d'un serveur NodeJS avec Express
-Dans cette partie, on aura principalement besoin de gérer deux types de requêtes : `GET` et `POST`. Chaque requête devra actionner une fonction qui prend comme paramètre deux attributs, par convention req pour `Request` et res pour `Result`.
+Pour installer Express JS sur Linux, exécutez la commande suivante :
+```bash
+sudo apt-get install nodejs npm  # Pour installer Node JS
+sudo npm install express --save  # Pour installer express JS
+```
 
-```NodeJS
+Il n'est pas imposé d'utiliser Express JS, si vous souhaitez utiliser Node JS seulement, vous êtes libres de le faire. Vous trouverez un exemple d'un serveur NodeJS qui n'utilise pas Express JS.
+
+### Mise en place d'un serveur NodeJS avec Express
+Dans cette partie, on aura principalement besoin de gérer deux types de requêtes : `GET` et `POST`. Les deux autres types de requêtes HTTP (à savoir `HEAD` et `GETALL`) ne sont pas prises en considération. Chaque requête devra actionner une fonction qui prend comme paramètre deux attributs, par convention req pour `Request` et res pour `Result`.
+
+Avec Express JS
+```JS
+// Initialiser la variable body parser qui sert à parser le contenu des requêtes
 const bodyParser = require("body-parser");
+// Initialiser la variable express
 const express = require("express");
+// Initialisation de la variable app, celle-ci est la variable qui va servir à traiter toutes les requêtes que le serveur reçoit.
 const app = express();
+// Initialisation de la constante fs (File System) qui utilise le module fs pour intéragir avec le ficher système
 const fs = require('fs');
 
 app.use(express.json());
@@ -178,13 +191,129 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 // Routage de la page d'accueil en renvoyant "welcome page!"
 app.get('/', (req, res) => {
-    res.send('welcome page!')
+    res.send("Page d'accueil !")
+    res.sendFile('WelcomePage.html')
 });
 
-// Routage de la page [adresse vers le serveur]/contacts en récupérant le corp de la requête
-app.post('/contacts', (req, res) => {
-    var requete = req.body
+app.get('/login', (req, res) => {
+    res.sendFile('login.html')
+    res.send("page d'authentification")
 }
+
+// Routage de la page [adresse vers le serveur]/contacts en récupérant le corp de la requête
+app.post('/login', (req, res) => {
+    var requete = req.body
+    var informations = JSON.parse(JSON.stringify(requete))
+    var authentification = checkInDatabase(information[0].username, information[0].password)
+    if(authentification)
+    {
+        res.sendFile('clientAccess.html')
+    }
+    else
+    {
+        res.send("Nom d'utilisateur ou mot de passe incorrect")
+    }
+}
+
+app.use(function(req, res){
+   res.sendStatus(404);
+});
+
+app.listen(8080, () => {
+  console.log("Started on http://localhost:8080");
+});
+```
+
+Avec Node JS
+```JS
+const http = require("http");
+const host = 'localhost';
+const fs = require('fs')
+const port = 8080;
+
+const requestListener = function ( req , res) {
+    // Spécifier le type du contenu à reçevoir (application/json)
+	res.setHeader("Content-Type", "application/json");
+	switch (req.url) { //traitement de l'url envoyée au serveur
+		case "/": // Requête vers la page d'accueil 
+			res.writeHead(200);
+			res.end("Page d'accueil !");
+            res.sendFile("")
+			break
+		case "/login": // requête vers la page d'authentification de la forme (adresseduServeur/login)
+			res.writeHead(200);
+            // Traitement de la requête de type GET
+			if (req.method == 'GET')
+			{
+                res.sendFile("login.html") 
+				res.end("Page d'authentification")
+                // Traitement la requête de type POST
+			}else if (req.method == 'POST')
+			{
+				var requete = ""
+				req.on('data', chunk =>
+				{
+					requete += chunk;
+				})
+				req.on('end', () => {
+					var informations = JSON.parse(requete)
+                    var authentification = checkInDatabase(information[0].username, information[0].password)
+                    if(authentification)
+                    {
+                        res.sendFile('clientAccess.html')
+                    }
+                    else
+                    {
+                        res.send("Nom d'utilisateur ou mot de passe incorrect")
+                    }
+				})
+			}
+			break
+            // Si l'utilisateur envoie une route qui n'existe pas au serveur
+		default:
+			res.writeHead(404);
+			res.end(JSON.stringify({error:"Resource not found"}));
+	}
+}
+
+const server = http.createServer(requestListener);
+server.listen(port, host, () => {
+    console.log(`Server is listening at http://${host}:${port}`);
+});
+```
+
+### Accès au serveur depuis Android
+Afin de pouvoir accéder au serveur à partir d'android, trois façons sont envisageables :
+1. Si le serveur est hébergé avec une URL publique, il est possible d'y accéder avec l'URL (exemple : www.google.fr)
+2. Si le serveur s'exécute en localHost, bien qu'il soit possible d'y accéder avec un navigateur avec l'adresse http://127.0.0.1:PortNb ou http://localhost:PortNb, cette adresse n'est pas reconnue sur l'émulateur. Il est possible d'y accéder avec l'émulateur Android avec l'adresse 10.0.2.2:PortNb.
+3. Si le serveur s'exécute en localHost, mais que vous utilisez votre téléphone pour l'exécution, il n'est pas possible d'y accéder avec l'adresse localHost étant donné que votre téléphone n'y a pas accès. Par conséquent, il existe des solutions tel que `Ngrok` qui permettent de proposer une adresse publique pour un protocole et un numéro de port donné. Pour cela, il faut créer un compte sur leur site [https://ngrok.com](https://ngrok.com) puis télécharger le fichier ZIP et exécuter `Ngrok` pour le protocole http et le numéro de port souhaité. Tous les détails concernant l'exécution de `Ngrok` sont décrites sur le site une fois le compte créé.
+
+Il existe d'autres façons d'accéder à un serveur local si vous êtes sur le même réseau (en utilisant l'adresse IP publique du réseau par exemple), libre à vous de choisir la solution qui vous convient à partir du moment où vous la mentionnez dans le compte-rendu.
+
+Si vous utiliser un serveur distant tel que `Ngrok` pour l'envoi des requêtes, il est indispensable d'autoriser l'envoi de requêtes en texte claire sur Android. Pour cela, dans l'arborescence `app/res`, créez un répertoire nommé xml. Dans ce répertoire, créer un fichier xml que vous nommez `network_security_config.xml` dans lequel vous y collez le code suivant :
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>
+
+```
+
+Ensuite, dans le fichier `AndroidManifest.xml`, rajouter la ligne suivante :
+```xml
+<manifest    ...>
+...
+<application ...>
+    android:networkSecurityConfig="@xml/network_security_config"
+<activity>
+...
+</activity>
+</application>
+</manifest>
 ```
 
 ### Envoi d'une requête HTTP depuis Android avec Andoid Volley
@@ -218,7 +347,7 @@ La méthode suivante est utilisée pour envoyer une requête `GET`
     }
 ```
 
-La méthode suivante est utilisée pour envoyer une requête `POST`
+La méthode suivante est utilisée pour envoyer une requête `POST`. Il est indispensable que les informations envoyées au serveur soient de type JSON (dans notre cas).
 ```Java
 @JavascriptInterface
     public void postStringRequest(String URL, String informationsJson)
