@@ -204,6 +204,9 @@ app.get('/login', (req, res) => {
 app.post('/login', (req, res) => {
     var requete = req.body
     var informations = JSON.parse(JSON.stringify(requete))
+    // Enregistrer les informations contenues dans la requête dans le fichier "logins.json" dans le répertoire courant du serveur
+    fs.writeFileSync('./logins.json', JSON.stringify(requete));
+    // Vérifier si l'identifiant et le mot de passe envoyés correspondent bien aux données d'un compte client dans la base de données
     var authentification = checkInDatabase(information[0].username, information[0].password)
     if(authentification)
     {
@@ -257,20 +260,23 @@ const requestListener = function ( req , res) {
 				})
 				req.on('end', () => {
 					var informations = JSON.parse(requete)
+                    // Enregistrer les informations contenues dans la requête dans le fichier "logins.json" dans le répertoire courant du serveur
+                    fs.writeFileSync('./logins.json', JSON.stringify(requete));
+                    // Vérifier si l'identifiant et le mot de passe envoyés correspondent bien aux données d'un compte client dans la base de données
                     var authentification = checkInDatabase(information[0].username, information[0].password)
+                    // authentification réussie
                     if(authentification)
                     {
                         res.sendFile('clientAccess.html')
                     }
-                    else
+                    else // authentification échouée
                     {
                         res.send("Nom d'utilisateur ou mot de passe incorrect")
                     }
 				})
 			}
 			break
-            // Si l'utilisateur envoie une route qui n'existe pas au serveur
-		default:
+		default: // Si l'utilisateur envoie une route qui n'existe pas au serveur
 			res.writeHead(404);
 			res.end(JSON.stringify({error:"Resource not found"}));
 	}
@@ -281,6 +287,23 @@ server.listen(port, host, () => {
     console.log(`Server is listening at http://${host}:${port}`);
 });
 ```
+### Gestion du Routage dans le serveur
+Routage fait référence à la détermination de la façon dont une application répond à un nœud final spécifique, c’est-à-dire un URI (ou chemin) et une méthode de requête HTTP (GET, POST, etc.).
+
+Chaque route peut avoir une ou plusieurs fonctions de gestionnaire, qui sont exécutées lorsque la route est mise en correspondance.
+
+La définition de la route utilise la structure suivante :
+```js
+app.METHOD(PATH, HANDLER)
+```
+Où
+    `app` est une instance d’express.
+    `METHOD` est une méthode de demande HTTP.
+    `PATH` est un chemin sur le serveur.
+    `HANDLER` est la fonction exécutée lorsque la route est mise en correspondance.
+
+L'exemple suivant illustré avec un diagramme de séquence détaille un simple cas d'étude d'un échange entre un client et un serveur.
+![](exempleRoutage.png)
 
 ### Accès au serveur depuis Android
 Afin de pouvoir accéder au serveur à partir d'android, trois façons sont envisageables :
@@ -399,5 +422,5 @@ La méthode suivante est utilisée pour envoyer une requête `POST`. Il est indi
     }
 
 ```
-
-### URL
+### Conseils pratiques
+1. À chaque fois que vous effectuez des modifications du côté serveur, rééxécutrez-le
