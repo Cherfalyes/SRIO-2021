@@ -96,10 +96,6 @@ Date
 Description
 ```
 
-__Bonus :__
-* Ecrivez le code nécessaire pour charger de nouvelles photos lorsque l'utilisateur scroll vers le bas.
-
-
 ## Partie III : Collecter les données GPS de l'utilisateur
 
 Dans cette partie, il vous est demandé de collecter les coordonnées GPS d'un téléphone sur un serveur distant toutes les minutes.

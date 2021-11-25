@@ -422,5 +422,3 @@ La méthode suivante est utilisée pour envoyer une requête `POST`. Il est indi
     }
 
 ```
-### Conseils pratiques
-1. À chaque fois que vous effectuez des modifications du côté serveur, rééxécutrez-le
