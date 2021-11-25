@@ -81,9 +81,40 @@ myWebView.setWebChromeClient(new WebChromeClient() {
 
 ## Partie III : Exécuter du code Java à partir de Javascript
 ### Création de la classe WebAppInterface
+```Java
+public class WebAppInterface {
+    Context mContext;
 
-### Instanciation de la classe WebAppInterface dans 
+    /** Instantiate the interface and set the context */
+    WebAppInterface(Context c) {
+        mContext = c;
+    }
+
+    /** Show a toast from the web page */
+    @JavascriptInterface
+    public void showToast(String toast) {
+        Toast.makeText(mContext, toast, Toast.LENGTH_SHORT).show();
+    }
+}
+```
+Pour que les méthodes déclarées dans cette classes soient accessibles depuis JS, il est indispensable d'y ajouter `@JavascriptInterface` avant de déclarer la méthode.
+
+### Instanciation de la classe WebAppInterface dans la classe MainActivity.Java
+Dans la méthode onCreate() de la classe MainActivity.Java, y ajouter l'instruction suivante pour créer le bridge Java-Javascript nommé `Android` :
+```Java
+webView.addJavascriptInterface(new WebAppInterface(this), "Android");
+```
+
+### L'appel à la méthode "showToast()" Depuis JS de la Webview
+
 - Dans la page index.html
 ```html
+<script> 
+<input type="button" value="show Toast" onClick="showToast()" id="toast"/>
 
+function showToast(){
+    // L'appel aux méthodes Java se fait comme suit
+    Android.showToast("Salut! Depuis JS");
+}
+</script>
 ```
