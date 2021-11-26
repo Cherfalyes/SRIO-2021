@@ -67,7 +67,8 @@ Vous développerez cette application uniquement en **Java**.
 La documentation que propose le site de la Nasa vous permets d'effectuer des requêtes sur leur site. Complétez la méthode getRequest qu'est proposée ci-dessous pour envoyer la requête au site de la Nasa
 
 ```Java
-    public void getRequest(Context context, String url) throws IOException {
+    
+    public void getRequest(Context mContext, String url) throws IOException, JSONException {
         final JSONObject[] jsnobject = {new JSONObject()};
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(mContext);
@@ -78,9 +79,13 @@ La documentation que propose le site de la Nasa vous permets d'effectuer des req
                     public void onResponse(String response) {
                         // Display the first 500 characters of the response string.
                         System.out.println("Response is: "+ response);
-                        result[0] = response;
-                        // Pour obtenir l'URL de l'image envoyée par le serveur (si la requête ne concerne qu'une seule image)
-                        String urlImage = result[0].get("url");
+                        retours.add(response);
+                        try {
+                            jsnobject[0] = new JSONObject(response);
+                            String url = jsnobject[0].get("url"):
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }, new Response.ErrorListener() {
             @Override
