@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hello</title>
+
+    <script type="text/javascript" src=main.js>
+    </script>
+
+</head>
+<body>
+    <h1>Trouver les contacts du téléphone</h1>
+    <button onclick="getContacts()">Recuperer les contacts</button>
+    <table class="table table-stripped" id="table" border="2">
+        <thead>
+        <tr><th> Nom </th> <th> Numéro </th></tr>
+        </thead>
+        <tbody id="contacts">
+        </tbody>
+    </table>
+    <textarea id="textAreaName"></textarea>
+    <textarea id="textAreaNum"></textarea>
+    <input id="textAreaMsg">
+    <button onclick="sendSMS()">envoyer le message</button>
+    <button onclick="composeNum()">composer le numéro de téléphone</button>
+</body>
+</html>
