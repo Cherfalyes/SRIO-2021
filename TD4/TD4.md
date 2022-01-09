@@ -1,4 +1,5 @@
-# Initiation à l'analyse statique d'application Android
+# Introduction aux vulnérabilités d'une webview
+
 Le but de ce TP est de vous sensibiliser et de vous familiariser avec certaines notions de sécurité informatique.
 Les pratiques que vous allez mettre en oeuvre ne sont autorisées que sur du matériel vous appartenant ou pour lequel
 vous avez les autorisations écrites nécessaires émanant des autorités idoines.
@@ -9,7 +10,7 @@ Le fait d'accéder ou de se maintenir, frauduleusement, dans tout ou partie d'un
 
 Lorsqu'il en résulte soit la suppression ou la modification de données contenues dans le système, soit une altération du fonctionnement de ce système, la peine est de trois ans d'emprisonnement et de 45000 euros d'amende.
 
-Lorsque les infractions prévues aux deux premiers alinéas ont été commises à l'encontre d'un système de traitement automatisée de données à caractère personnel mis en oeuvre par l'Etat, la peine est portée à cinq ans d'emprisonnement et à 75 000 euros d'amende.
+Lorsque les infractions prévues aux deux premiers alinèas ont été commises à l'encontre d'un système de traitement automatisée de données à caractère personnel mis en oeuvre par l'Etat, la peine est portée à cinq ans d'emprisonnement et à 75 000 euros d'amende.
 
 ## Consignes
 
@@ -41,91 +42,127 @@ Les consignes suivantes sont à respecter :
 Il est de votre responsabilité de vérifier que l'application Android que vous développez est compatible avec la version d'Android et l'appareil mentionnés ci-dessus.
 Toute application non fonctionnelle en raison de problèmes d'incompatibilité ne sera pas prise en compte dans la note finale du TP.
 
-# Context
+## Contexte
 
-Pour des raisons de sécurité ou de maintenance, il est parfois nécessaire d'analyser le fonctionnement d'un programme ou d'une application.
-Cependant, il est probable que vous n'ayez pas accès au code source de cette application, mais seulement à l'APK final.
-De nombreux outils et techniques ont été développées pour faciliter l'analyse d'applications dans ce contexte.
+En raison de sa popularité, la plateforme Android est une cible de choix pour des personnes malveillantes qui voudraient attaquer un grand nombre de personnes.
+Depuis l'avènement d'Android sur le marché des smartphones, le nombre d'appareils infectés par des malware n'a fait qu'augmenter.
+Les auteurs de malware fabriquent des applications qui ont pour but d'espionner ou de voler des utilisateurs de smart devices.
+Pour mieux se protéger de cette menace, il est important de comprendre et de connaitre les mécanismes mis en oeuvre par ces logiciels malveillant.
 
-# Objectifs
+Pour maximiser leur impact, les malwares dissimulent leurs comportements malicieux aux yeux de l'utilisateur en
+se faisant passer pour des applications dites bénignes (i.e avec un comportement qui semble légitime).
+Cela permet à une application mal intentionnée de rester plus longtemps en activité sur le téléphone de la cible et donc de faire plus de dégâts.
 
-Dans ce TP, il vous est demandé de vous familiariser avec deux outils d'analyse statiques communément utilisés pour analyser manuellement et automatiquement le contenu d'une application Android.
+## Objectif
+Dans ce TP, il vous est demandé d'exploiter les faiblesses du système d'exploitation Android pour voler des données personnelles de l'utilisateur à son insu.
+Plus particulièrement, vous allez exploiter les vulnérabilités de *Webview*, explorées au cours du TP précédent, pour concevoir une application Android qui envoie des données collectées sur un téléphone à un serveur pirate distant.
 
-# Partie 1: Analyse manuelle d'une application
+L'objectif final de ce TD est de développer votre propre malware maquillé sous la forme d'un carnet d'adresses.
 
-Dans cette première partie, votre objectif est de vous apprendre à naviguer dans l'architecture d'une application Android sans son code source.
+### Partie I: Implémenter un carnet d'adresses
 
-## Apktool
+Dans cette partie, il vous est demandé de développer la partie inoffensive (bénigne) de l'application, qui servira plus tard de camouflage pour déjouer la vigilance de l'utilisateur.
 
-### Utiliser Apktool
-Pour installer Apktool, vous pouvez suivre les instructions à la page suivante : [https://ibotpeaches.github.io/Apktool/install/](https://ibotpeaches.github.io/Apktool/install/)
+Voici les caractéristiques de l'application:
 
-Apktool est un outil qui s'utilise en ligne de commande (Command-line interface). Vous utiliserez donc le terminal pour interagir avec l'outil.
+L'application est un carnet d'adresses qui permet à l'utilisateur de parcourir les différents contacts de son téléphone.
+Lors de la sélection d'un contact, l'utilisateur peut au choix lui envoyer un sms ou composer son numéro de téléphone.
 
-1. Tout au long de ce `td4`, vous utiliserez l'APK d'une application de contacts qui vous servira d'exemple. Téléchargez la version `6.13.1` de l'application [ici](https://f-droid.org/en/packages/com.simplemobiletools.contacts.pro/).
-2. Vérifiez que le fichier que vous avez téléchargé est bien celui souhaité en certifiant que le checksum (sha256) est identique à celui-ci : `bf97db9c40a26feff57e9cc0d4b7a0f31e3a50ae3dcf623955dc2265a8ba884a`.
-Pour effectuer cette opération, vous pourrez utiliser l'outil `openssl` en ligne de commande.
-    - Que signifie `sha256` ? 
-    - Expliquez succinctement le principe d'une fonction de hashage.
-3. A l'aide de la documentation d'`apktool`, effectuez un décodage complet de l'APK que vous avez téléchargé.
-    - Quels sont les différents types de fichiers que cet APK contient ?
-    - Quelles sont les permissions demandées par cette application ?
-    - Où se trouve le bytecode de l'application ?
-    - Qu'est ce que `smali`, et pourquoi est-il utilisé dans `apktool` ?
-4. Parcourez la représentation `smali` du bytecode et localisez le ou les endroits où l'application récupère la liste des contacts du téléphone.
-Pour cela, vous pourrez utiliser la commande `grep`. La [documentation officielle](https://developer.android.com/reference/android/provider/ContactsContract.Contacts) d'Android vous permettra de connaitre le nom de la méthode à trouver.
-5. A l'aide de la documentation d'`apktool`, re-construisez (`build`) l'application complète afin d'obtenir un nouvel APK.
-    - Déterminer le `sha256` du nouvel APK créé. Est-il différent du `sha256` de l'APK original ? Pourquoi ?
+* Ecrivez le code Javascript et Java nécessaire pour récupérer les contacts de l'utilisateur et les afficher sous forme de liste au sein de la Webview.
+    * Pour chaque contact, récupérez le son nom ainsi que son numéro de téléphone
+    * Pour passer les données au contexte Webview, formattez les contacts au format `JSON` et sérialisez le tableau `JSON` obtenu en une `String`.
+    * Pour récupérer les données dans le contexte Webview, dé-sérialisez la `String` obtenue pour obtenir un objet javascript manipulable.
+* Ecrivez le code Javascript nécessaire pour pouvoir saisir le contenu d'un SMS après sélection d'un contact.
+* Ecrivez le bridge qui permet d'envoyer un SMS à un contact à partir du contenu saisi lors de l'action précédente.
+* Ecrivez le code nécessaire qui permet de notifier l'utilisateur que le SMS a bien été envoyé.
+* Ecrivez le bridge qui permet de composer le numéro de téléphone d'un contact sélectionné.
 
-## Questions
+#### Questions:
 
-Les questions pour cet première partie sont celles présentes ci-dessus.
+1. Pourquoi est-il nécessaire de sérialiser les données de contacts pour les passer du contexte Java au contexte Webview ?
+2. Quels sont les types de données qui peuvent être utilisés pour passer des données de Java à Webview ?
+3. Quelles permissions doivent être accordées à l'application pour être complètement fonctionnelle ?
 
-# Partie 2: Analyser une application programmatiquement
+### Partie II: Voler les contacts de l'utilisateur
 
-Dans cette seconde partie de TD, votre premier objectif est de réussir a faire fonctionner Soot en utilisant leur tutoriel.
-La seconde partie de ce TP aura pour but de vous apprendre à extraire automatiquement des informations et instrumenter le code de l'APK d'une application Android.
-Votre dernier objectif, est de modifier le bytecode de l'application pour envoyer la liste des contacts (et numéros) à votre serveur pirate (voir TP2-3).
+Dans cette partie, vous allez modifier le code de l'application produit dans la partie 1 pour envoyer les contacts enregitrés dans le téléphone lorsque l'utilisateur ouvre votre application.
 
-## Soot
+Dans certains scénarios malicieux, un pirate subtilise les contacts de plusieurs centaines de téléphones pour 
+ensuite effectuer des tentatives phishing avec les numéros de téléphones collectés.
+<!--
+A partir du travail effectué lors du TD1, il vous est demandé de mettre à jour le code de votre application pour 
+collecter les contacts de l'utilisateur.
+-->
 
-Soot est un framework qui permet d'analyser et d'instrumentaliser le bytecode d'un programme Java.
-Comme une application Android est elle aussi écrite en Java, il est possible d'utiliser Soot comme framework d'analyse statique pour Android.
+<!--
+1. Ecrivez le code nécessaire pour implémenter le bridge qui permet de collecter les contacts de l'utilisateur dans 
+le contexte de la *Webview*.
+2. Ecrivez le bridge nécessaire qui permet de récupérer l'identifiant unique du téléphone dans le contexte de la Webview
+-->
 
-## Soot Hello World
+#### Etape 1: Envoyer les contacts à un serveur distant.
 
-1. Clonez le dépôt du [tutoriel de Soot](https://github.com/noidsirius/SootTutorial) et lisez le README.md
-2. Répliquez la partie logger du tutoriel du chapitre 3: Android Instrumentation
+Dans un premier temps, il vous est demandé d'écrire le code Javascript nécessaire pour envoyer la liste de contacts
+ainsi que le numéro `imei` collecté à un serveur distant.
 
-## Parcourir et instrumenter le bytecode de l'application
+Le message envoyé doit être au format `JSON` et aura la structure suivante :
+```json
+{
+	"imei": "string",
+	"contacts": [
+		{
+			"name": "string",
+			"phone_number": "string",
+			"mail_address": "string"
+		}
+	]
+}
+```
+* Ecrivez le code __Javascript__ (dans le context de Webview) nécessaire pour envoyer une requête `http` contenant le message décrit précédemment.
 
-1. Modifiez le code du tutoriel afin qu'elle analyse l'application de contact utilisé précédement.
-2. Listez toutes les classes et méthodes contenues dans l'application (sans exécuter l'application).
-3. Ecrivez le code Java nécessaire pour localiser la méthode qui permet de récupérer la liste des contacts de l'appareil
-4. Pour s'assurer que c'est la bonne méthode, instrumentez le code afin de logger la liste des contacts
+##### Questions
+1. Comment se prémunir d'une attaque comme celle que vous développez ?
+2. Comment vous assurer que qu'une application installée sur votre téléphone fait uniquement ce qu'elle prétend offrir comme service et pas plus ?
 
-## Injecter une faille dans le bytecode de l'application
 
-Dans cette partie, il vous est demandé de modifier le comportement de l'application pour que celle-ci déclenche un un envoi de la liste des contacts ainsi que leur numéros.
+#### Etape 2: Développer un simple serveur web pirate
 
-Le but de cette partie, est de recréer le comportement de l'application du TP2 à partir d'une application existante. Vous veillerez à ce que l'application résultante de l'injection de code soit compatible avec votre serveur pirate.
+L'objectif de cette partie est de concevoir un serveur pirate capable de recevoir des données au format `json` au travers du protocol `http`.
+Vous écrirez le code nécessaire dans le répertoire suivant : `td6/pirate_server`.
 
-Vous allez tout d'abord injecter un code java benin afin de comprendre comment injecter du code java statique :
-1. Changez dans le code de la partie précédente l'injection de la fonction de log par un appel a une methode statique en java.
-2. Recompilez l'application
-3. Signez l'application
-4. Installez et exécutez l'application sur un émulateur et vérifiez que la fonction s'exécute correctement
+Voici les spécifications requises pour le serveur : 
 
-Maintenant que vous savez injecter du code, transformez le code benin précédent pour qu'il effectue le vol des données de contacts :
-1. Changez dans le code benin en une requête POST vers votre serveur pirate.
-2. Recompilez l'application
-3. Signez l'application
-4. Installez et exécutez l'application sur un émulateur et vérifiez que le serveur reçois bien les données volée.
+- Le serveur doit utiliser la plateforme `node.js`.
+- Le serveur doit communiquer avec ses clients au travers du protocole `http`.
+- Le serveur doit être capable d'agir correctement en fonction de la requête qui lui est envoyée (`http` routing).
+- Le serveur doit être capable de *parser* le contenu de la requête reçue.
+- Pour chaque message reçu, le serveur doit écrire le contenu du champ `contacts` dans un fichier nommé avec le numéro `imei` correspondant (`{imei}.txt`). Ces fichiers doivent être stockés dans le répertoire `td6/pirate_server/stolen_contacts`.
+- Le serveur doit renvoyer une erreur au client si la requête qui lui est envoyée n'est pas prise en charge par celui-ci.
+- Le serveur doit renvoyer une erreur au client si l'information contenue dans la requête n'est pas dans un format valide (`json`)
 
-## Questions 
-1. Expliquez le concept de représentation intermédiaire de bytecode, faites un schéma explicatif.
-2. Definissez avec vos propre mots ce qu'est le repackaging d'application (Application repackaging).
-3. Quels sont les moyens de defenses à la disposition des développeurs (Pour se protéger ou au moins gener l'attaquant) ?
-    - Donnez quelques techniques de defences.
-    - Donnez quelques outils utilisant ces techniques.
-4. Par quelles méthodes un utilisateur peut-il éviter ce genre d'application ?
+Pour vous aider, vous pouvez consulter :
+
+- la documentation de l'interface `http` de nodejs : [https://nodejs.org/api/http.html](https://nodejs.org/api/http.html)
+- les exemples fournis dans la documentation de nodejs : [https://nodejs.org/api/synopsis.html](https://nodejs.org/api/synopsis.html)
+
+### Partie III: Envoyer des sms surtaxés
+
+Dans cette partie, vous devrez modifier le code de votre application malicieuse pour permettre au serveur pirate d'envoyer une commande qui ordonne à votre application d'envoyer des sms à un numéro de téléphone surtaxé à l'insu de l'utilisateur.
+
+Pour que le serveur pirate puisse facilement envoyer des messages à l'application malicieuse, il vous est demandé d'ouvrir une connexion websocket entre le serveur et l'application.
+
+* Ecrivez le code Javascript nécessaire sur le serveur et le client pour ouvrir une connexion websocket.
+* Ecrivez le code Javascript nécessaire sur le serveur pour envoyer une commande `send_sms`.
+Cette commande est un message dont la structure est la suivante:
+```json
+{
+	"command": "send_sms",
+	"payload":
+		{
+			"phone_number": "string",
+			"content": "string"
+		}
+}
+```
+* Ecrivez le code Javascript nécessaire sur le client pour traiter correctement la réception de la commande `send_sms`.
+* Utilisez le bridge implémenté précédemment pour envoyer un sms à un contact pour envoyer un sms surtaxé à partir du contenu du message de la commande `send_sms`.
